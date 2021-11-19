@@ -3,7 +3,8 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+import pandas as pd
+import plotly.express as px
 
 auth = Blueprint('auth', __name__)
 
@@ -62,5 +63,13 @@ def sign_up():
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
+        return render_template("signup.html", user=current_user)
 
-    return render_template("signup.html", user=current_user)
+
+@auth.route('/results')
+@login_required
+def results():
+    df = pd.read_csv(r'C:/Users/17329/OneDrive/Documents/Fall 2021/CMSCI 349/PROJ/New_Dummy_Data.csv')
+    barChart = px.bar(df, x='Salary', y='Company', color='Title', title='Dummy Data Jobs')
+    barChart.show()
+    return render_template("results.html")
