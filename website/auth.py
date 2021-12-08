@@ -1,3 +1,4 @@
+import plotly
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -27,6 +28,14 @@ def login():
             flash('Email does not exist.', category='error')
 
     return render_template("login.html", user=current_user)
+
+@auth.route('/home')
+def home():
+    if request.method == 'POST':
+        job_field = request.form.get('job_field')
+        salary = request.form.get('salary')
+        location = request.form.get('location')
+
 
 
 @auth.route('/logout')
@@ -66,13 +75,18 @@ def sign_up():
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
-        return render_template("signup.html", user=current_user)
+
+    return render_template("signup.html", user=current_user)
 
 
 @auth.route('/results')
-@login_required
 def results():
-    df = pd.read_csv(r'C:/Users/17329/OneDrive/Documents/Fall 2021/CMSCI 349/PROJ/New_Dummy_Data.csv')
-    barChart = px.bar(df, x='Salary', y='Company', color='Title', title='Dummy Data Jobs')
-    barChart.show()
-    return render_template("results.html")
+    return render_template("results.html", user=current_user)
+
+
+@auth.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template("dashboard.html", user=current_user)
+
+
