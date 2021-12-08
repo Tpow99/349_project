@@ -35,6 +35,9 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+@auth.route('/about')
+def about():
+    return render_template("about.html",user=None)
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def sign_up():
