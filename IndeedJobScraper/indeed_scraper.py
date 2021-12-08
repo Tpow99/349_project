@@ -1,8 +1,8 @@
-import pandas as pd
 import requests         # grab web-page
 from bs4 import BeautifulSoup as bsopa  # parse web-page
-import datetime         # format date/time
 import csv
+from csv import writer
+import os.path
 
 scrpDataL = []
 for j in range(0, 15, 10):  # calling 15 entries
@@ -64,7 +64,13 @@ for jobEntry in scrpDataL:
 
 # add list of scraped data to CSV file
 cols = ['Position', 'Company', 'Location', 'Salary']
-with open('scraped_jobs.csv', 'w', encoding='UTF8', newline='') as file:
-    write = csv.writer(file)
-    write.writerow(cols)
-    write.writerows(scrpDataL)
+
+if os.path.exists('scraped_jobs.csv'):
+    with open('scraped_jobs.csv', 'a+', encoding='UTF8', newline='') as file:
+        write = writer(file)
+        write.writerows(scrpDataL)
+else:
+    with open('scraped_jobs.csv', 'w', encoding='UTF8', newline='') as file:
+        write = csv.writer(file)
+        write.writerow(cols)
+        write.writerows(scrpDataL)
